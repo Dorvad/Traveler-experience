@@ -140,6 +140,28 @@ function Field({ q, help, children, icon }) {
   );
 }
 
+// Free-text input shown when "אחר" is selected
+function OtherInput({ value, onChange, placeholder = 'פרטו את הקטגוריה...' }) {
+  return (
+    <input
+      type="text"
+      value={value || ''}
+      onChange={e => onChange(e.target.value)}
+      placeholder={placeholder}
+      style={{
+        marginTop: 8, width: '100%',
+        padding: '10px 14px',
+        background: '#ffffff',
+        border: 0, outline: 0,
+        borderRadius: 14,
+        boxShadow: '0 0 0 2px rgba(45,184,167,0.4), 0 2px 8px rgba(20,56,98,0.06)',
+        fontSize: 14.5, color: 'var(--ink-900)',
+        fontFamily: 'inherit', direction: 'rtl',
+      }}
+    />
+  );
+}
+
 function toggle(arr, x) {
   return arr.includes(x) ? arr.filter(a => a !== x) : [...arr, x];
 }
@@ -166,6 +188,9 @@ function Step1({ passenger, setPassenger }) {
                     onClick={() => update({ where: o })}>{o}</Chip>
             ))}
         </ChipGroup>
+        {s.where === 'אחר' && (
+          <OtherInput value={s.whereCustom} onChange={v => update({ whereCustom: v })}/>
+        )}
       </Field>
 
       <Field q="איזה סוג אינטראקציה זיהינו?">
@@ -177,6 +202,9 @@ function Step1({ passenger, setPassenger }) {
                     onClick={() => update({ interaction: o })}>{o}</Chip>
             ))}
         </ChipGroup>
+        {s.interaction === 'אחר' && (
+          <OtherInput value={s.interactionCustom} onChange={v => update({ interactionCustom: v })}/>
+        )}
       </Field>
 
       <Field q="מי היה מעורב?" help="ניתן לבחור יותר מאחד">
@@ -190,6 +218,9 @@ function Step1({ passenger, setPassenger }) {
               </Chip>
             ))}
         </ChipGroup>
+        {(s.involved || []).includes('אחר') && (
+          <OtherInput value={s.involvedCustom} onChange={v => update({ involvedCustom: v })}/>
+        )}
       </Field>
 
       <Field q="תיאור עובדתי של מה שקרה">
@@ -293,11 +324,18 @@ function Step2({ passenger, setPassenger }) {
               </Chip>
             ))}
         </ChipGroup>
+        {(s.types || []).includes('אחר') && (
+          <OtherInput value={s.typesCustom} onChange={v => update({ typesCustom: v })}/>
+        )}
       </Field>
 
       <Field q="איפה במסע הנוסע זה קרה?">
         <JourneyLine items={journey} value={s.stage}
                      onChange={v => update({ stage: v })}/>
+        {s.stage === 'אחר' && (
+          <OtherInput value={s.stageCustom} onChange={v => update({ stageCustom: v })}
+                      placeholder="תארו את שלב המסע..."/>
+        )}
       </Field>
 
       <Field q="עד כמה הרגע היה משמעותי?">
@@ -398,6 +436,9 @@ function Step3({ passenger, setPassenger }) {
               </Chip>
             ))}
         </ChipGroup>
+        {(s.thoughts || []).includes('אחר') && (
+          <OtherInput value={s.thoughtsCustom} onChange={v => update({ thoughtsCustom: v })}/>
+        )}
       </Field>
 
       <Field q="מה לדעתכם הנוסע הרגיש?" icon="heart">
@@ -410,6 +451,9 @@ function Step3({ passenger, setPassenger }) {
               </Chip>
             ))}
         </ChipGroup>
+        {(s.emotions || []).includes('אחר') && (
+          <OtherInput value={s.emotionsCustom} onChange={v => update({ emotionsCustom: v })}/>
+        )}
       </Field>
 
       <Field q="מה הנוסע היה צריך באותו רגע?" icon="compass">
@@ -423,6 +467,9 @@ function Step3({ passenger, setPassenger }) {
               </Chip>
             ))}
         </ChipGroup>
+        {(s.needs || []).includes('אחר') && (
+          <OtherInput value={s.needsCustom} onChange={v => update({ needsCustom: v })}/>
+        )}
       </Field>
 
       <Field q="במשפט או שניים, איך נראתה החוויה מנקודת המבט של הנוסע?">
@@ -459,6 +506,9 @@ function Step4({ passenger, setPassenger }) {
                     onClick={() => update({ howIdentified: o })}>{o}</Chip>
             ))}
         </ChipGroup>
+        {s.howIdentified === 'אחר' && (
+          <OtherInput value={s.howIdentifiedCustom} onChange={v => update({ howIdentifiedCustom: v })}/>
+        )}
       </Field>
 
       <Field q="איזה מענה ניתן?">
@@ -472,6 +522,9 @@ function Step4({ passenger, setPassenger }) {
               </Chip>
             ))}
         </ChipGroup>
+        {(s.response || []).includes('אחר') && (
+          <OtherInput value={s.responseCustom} onChange={v => update({ responseCustom: v })}/>
+        )}
       </Field>
 
       <Field q="מה עבד טוב?" icon="check-circle">
@@ -485,6 +538,9 @@ function Step4({ passenger, setPassenger }) {
               </Chip>
             ))}
         </ChipGroup>
+        {(s.worked || []).includes('אחר') && (
+          <OtherInput value={s.workedCustom} onChange={v => update({ workedCustom: v })}/>
+        )}
       </Field>
 
       <Field q="מה פחות עבד?">
@@ -498,6 +554,9 @@ function Step4({ passenger, setPassenger }) {
               </Chip>
             ))}
         </ChipGroup>
+        {(s.didnt || []).includes('אחר') && (
+          <OtherInput value={s.didntCustom} onChange={v => update({ didntCustom: v })}/>
+        )}
       </Field>
 
       <Field q="מה אפשר ללמוד מהמענה שניתן?">
@@ -547,6 +606,9 @@ function Step5({ passenger, setPassenger }) {
       }
     });
   };
+  const setGroupOther = (groupId, text) => {
+    update({ causesOther: { ...(s.causesOther || {}), [groupId]: text } });
+  };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
@@ -559,10 +621,18 @@ function Step5({ passenger, setPassenger }) {
 
       {CAUSE_GROUPS.map(group => {
         const list = (s.causes && s.causes[group.id]) || [];
+        const hasOther = list.some(c => c.id === 'אחר');
         return (
-          <CauseGroupCard key={group.id} group={group} selected={list}
-                          onToggle={(o) => toggleCause(group.id, o)}
-                          onImpact={(o, i) => setImpact(group.id, o, i)}/>
+          <div key={group.id}>
+            <CauseGroupCard group={group} selected={list}
+                            onToggle={(o) => toggleCause(group.id, o)}
+                            onImpact={(o, i) => setImpact(group.id, o, i)}/>
+            {hasOther && (
+              <OtherInput
+                value={(s.causesOther || {})[group.id]}
+                onChange={v => setGroupOther(group.id, v)}/>
+            )}
+          </div>
         );
       })}
 
@@ -696,6 +766,9 @@ function Step6({ passenger, setPassenger }) {
               </Chip>
             ))}
         </ChipGroup>
+        {(s.memory || []).includes('אחר') && (
+          <OtherInput value={s.memoryCustom} onChange={v => update({ memoryCustom: v })}/>
+        )}
       </Field>
 
       <Field q="השפעה כוללת על תפיסת השירות">
@@ -763,6 +836,9 @@ function Step7({ passenger, setPassenger }) {
               </Chip>
             ))}
         </ChipGroup>
+        {(s.whatMade || []).includes('אחר') && (
+          <OtherInput value={s.whatMadeCustom} onChange={v => update({ whatMadeCustom: v })}/>
+        )}
       </Field>
 
       <Field q="מה קרה שם בפועל?">
@@ -802,6 +878,9 @@ function Step8({ passenger, setPassenger }) {
               </Chip>
             ))}
         </ChipGroup>
+        {(s.improve || []).includes('אחר') && (
+          <OtherInput value={s.improveCustom} onChange={v => update({ improveCustom: v })}/>
+        )}
       </Field>
 
       <Field q="פעולה אחת ישימה בעקבות התצפית" icon="sparkle">
@@ -819,6 +898,9 @@ function Step8({ passenger, setPassenger }) {
               </Chip>
             ))}
         </ChipGroup>
+        {(s.who || []).includes('אחר') && (
+          <OtherInput value={s.whoCustom} onChange={v => update({ whoCustom: v })}/>
+        )}
       </Field>
 
       <Field q="רמת ישימות">
@@ -847,7 +929,6 @@ function Step9({ passenger, setPassenger }) {
         נסו לסכם את החוויה כאילו אתם הנוסע. משפט אחד, עד {max} תווים.
       </p>
 
-      {/* Boarding-pass-styled writing card */}
       <div style={{
         position: 'relative',
         background: 'linear-gradient(180deg, #ffffff 0%, #f4faff 100%)',
@@ -877,7 +958,6 @@ function Step9({ passenger, setPassenger }) {
         </div>
       </div>
 
-      {/* Tip */}
       <div style={{
         background: 'rgba(76,195,138,0.10)', borderRadius: 16,
         padding: '12px 14px', fontSize: 13, color: 'var(--ink-700)',

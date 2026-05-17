@@ -402,7 +402,7 @@ export function ScaleRow({ value, onChange, labels = [] }) {
   return (
     <div>
       <div style={{ display: 'flex', gap: 8, direction: 'ltr' }}>
-        {[1,2,3,4,5].map(n => {
+        {[5,4,3,2,1].map(n => {
           const sel = n === value;
           return (
             <button key={n} onClick={() => onChange && onChange(n)}
@@ -425,7 +425,7 @@ export function ScaleRow({ value, onChange, labels = [] }) {
       {labels.length === 2 && (
         <div style={{ display: 'flex', justifyContent: 'space-between',
                       fontSize: 11.5, color: 'var(--slate-500)', marginTop: 6 }}>
-          <span>{labels[0]}</span><span>{labels[1]}</span>
+          <span>{labels[1]}</span><span>{labels[0]}</span>
         </div>
       )}
     </div>

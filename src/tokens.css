@@ -135,7 +135,15 @@ textarea { resize: none; }
 }
 @keyframes cloudDrift {
   from { transform: translateX(0); }
-  to   { transform: translateX(20px); }
+  to   { transform: translateX(28px); }
+}
+@keyframes cloudDrift2 {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-36px); }
+}
+@keyframes cloudDrift3 {
+  from { transform: translateX(0); }
+  to   { transform: translateX(18px); }
 }
 @keyframes pulseDot {
   0%, 100% { opacity: 1; transform: scale(1); }

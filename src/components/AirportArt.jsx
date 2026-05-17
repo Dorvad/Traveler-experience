@@ -9,7 +9,7 @@ export function AirportScene({ height = 480, animatePlanes = true, showGround = 
       {/* Sky gradient bg */}
       <div style={{
         position: 'absolute', inset: 0,
-        background: 'linear-gradient(180deg, #a4d8f2 0%, #bfe4f5 45%, #d6eef9 78%, #e9f5fb 100%)',
+        background: 'linear-gradient(180deg, #6ab8e8 0%, #a4d8f2 30%, #bfe4f5 60%, #d6eef9 80%, #e9f5fb 100%)',
       }} />
 
       <svg viewBox="0 0 380 480" preserveAspectRatio="xMidYMid slice"
@@ -36,21 +36,37 @@ export function AirportScene({ height = 480, animatePlanes = true, showGround = 
             <stop offset="0" stopColor="#c5e8a6"/>
             <stop offset="1" stopColor="#8fcc85"/>
           </linearGradient>
+          <filter id="cloudBlur">
+            <feGaussianBlur stdDeviation="1.2"/>
+          </filter>
         </defs>
 
-        {/* Distant clouds */}
-        <g style={{ animation: 'cloudDrift 18s ease-in-out infinite alternate' }}>
-          <ellipse cx="80"  cy="170" rx="40" ry="11" fill="#ffffff" opacity="0.85"/>
-          <ellipse cx="115" cy="162" rx="22" ry="9"  fill="#ffffff" opacity="0.85"/>
-          <ellipse cx="60"  cy="178" rx="20" ry="8"  fill="#ffffff" opacity="0.85"/>
+        {/* ── Clouds — multiple layers ── */}
+        {/* Far layer, slow drift */}
+        <g style={{ animation: 'cloudDrift 22s ease-in-out infinite alternate' }} opacity="0.55">
+          <Cloud cx={60} cy={80} rx={36} ry={10}/>
         </g>
-        <g style={{ animation: 'cloudDrift 24s ease-in-out infinite alternate-reverse' }}>
-          <ellipse cx="310" cy="225" rx="38" ry="10" fill="#ffffff" opacity="0.7"/>
-          <ellipse cx="340" cy="218" rx="20" ry="8"  fill="#ffffff" opacity="0.7"/>
+        <g style={{ animation: 'cloudDrift2 28s ease-in-out infinite alternate-reverse' }} opacity="0.5">
+          <Cloud cx={300} cy={65} rx={42} ry={12}/>
         </g>
-        <g style={{ animation: 'cloudDrift 30s ease-in-out infinite alternate' }}>
-          <ellipse cx="190" cy="285" rx="44" ry="11" fill="#ffffff" opacity="0.6"/>
-          <ellipse cx="220" cy="278" rx="22" ry="8"  fill="#ffffff" opacity="0.6"/>
+
+        {/* Mid layer */}
+        <g style={{ animation: 'cloudDrift 18s ease-in-out infinite alternate' }} opacity="0.75">
+          <Cloud cx={130} cy={130} rx={50} ry={14}/>
+        </g>
+        <g style={{ animation: 'cloudDrift2 24s ease-in-out infinite alternate-reverse' }} opacity="0.7">
+          <Cloud cx={320} cy={160} rx={44} ry={13}/>
+        </g>
+        <g style={{ animation: 'cloudDrift3 20s ease-in-out infinite alternate' }} opacity="0.65">
+          <Cloud cx={55} cy={200} rx={38} ry={11}/>
+        </g>
+
+        {/* Near layer */}
+        <g style={{ animation: 'cloudDrift3 16s ease-in-out infinite alternate-reverse' }} opacity="0.55">
+          <Cloud cx={200} cy={255} rx={52} ry={14}/>
+        </g>
+        <g style={{ animation: 'cloudDrift 14s ease-in-out infinite alternate' }} opacity="0.45">
+          <Cloud cx={355} cy={230} rx={32} ry={10}/>
         </g>
 
         {/* Background mountain hint */}
@@ -137,51 +153,115 @@ export function AirportScene({ height = 480, animatePlanes = true, showGround = 
   );
 }
 
+// Puffy realistic cloud shape
+function Cloud({ cx, cy, rx, ry }) {
+  return (
+    <g transform={`translate(${cx},${cy})`}>
+      <ellipse cx="0"     cy="0"    rx={rx}      ry={ry}      fill="#ffffff"/>
+      <ellipse cx={rx*-0.38} cy={ry*-0.5} rx={rx*0.45} ry={ry*0.85} fill="#ffffff"/>
+      <ellipse cx={rx*0.32}  cy={ry*-0.55} rx={rx*0.52} ry={ry*0.95} fill="#ffffff"/>
+      <ellipse cx={rx*-0.62} cy={ry*0.1}   rx={rx*0.32} ry={ry*0.7}  fill="#f0f8ff" opacity="0.8"/>
+      <ellipse cx={rx*0.62}  cy={ry*0.15}  rx={rx*0.28} ry={ry*0.65} fill="#f0f8ff" opacity="0.8"/>
+    </g>
+  );
+}
+
 function PlaneFlock() {
   return (
     <>
+      {/* Large plane, left → right, high altitude */}
       <div style={{
-        position: 'absolute', top: '8%', left: 0, width: '100%',
-        height: 36, pointerEvents: 'none',
-        animation: 'planeGlide1 22s linear infinite',
+        position: 'absolute', top: '6%', left: 0, width: '100%',
+        height: 44, pointerEvents: 'none',
+        animation: 'planeGlide1 20s linear infinite',
       }}>
-        <PaperPlane size={28} color="#ffffff" stroke="#3a99cf" trail/>
+        <JetPlane size={44} bodyColor="#ffffff" accentColor="#3a99cf" stripe="#1d9d8d"/>
       </div>
+
+      {/* Medium plane, right → left */}
       <div style={{
-        position: 'absolute', top: '24%', left: 0, width: '100%',
-        height: 36, pointerEvents: 'none',
-        animation: 'planeGlide2 30s linear infinite 4s',
+        position: 'absolute', top: '22%', left: 0, width: '100%',
+        height: 34, pointerEvents: 'none',
+        animation: 'planeGlide2 28s linear infinite 5s',
       }}>
-        <PaperPlane size={22} color="#ffffff" stroke="#5fb6bc"/>
+        <JetPlane size={34} bodyColor="#e8f4fc" accentColor="#5fb6bc" stripe="#2db8a7" flip/>
       </div>
+
+      {/* Small distant plane, left → right */}
       <div style={{
-        position: 'absolute', top: '40%', left: 0, width: '100%',
-        height: 36, pointerEvents: 'none',
-        animation: 'planeGlide3 36s linear infinite 10s',
+        position: 'absolute', top: '38%', left: 0, width: '100%',
+        height: 26, pointerEvents: 'none',
+        animation: 'planeGlide3 36s linear infinite 11s',
       }}>
-        <PaperPlane size={18} color="#ffffff" stroke="#84c5e9"/>
+        <JetPlane size={26} bodyColor="#ffffff" accentColor="#84c5e9" stripe="#5fb4e3"/>
+      </div>
+
+      {/* Extra plane, left → right, very high */}
+      <div style={{
+        position: 'absolute', top: '13%', left: 0, width: '100%',
+        height: 22, pointerEvents: 'none',
+        animation: 'planeGlide1 44s linear infinite 18s',
+      }}>
+        <JetPlane size={22} bodyColor="#ddeef8" accentColor="#3a99cf" stripe="#2db8a7"/>
+      </div>
+
+      {/* Extra plane, right → left, mid altitude */}
+      <div style={{
+        position: 'absolute', top: '30%', left: 0, width: '100%',
+        height: 30, pointerEvents: 'none',
+        animation: 'planeGlide2 32s linear infinite 24s',
+      }}>
+        <JetPlane size={30} bodyColor="#ffffff" accentColor="#6ab8e8" stripe="#3a99cf" flip/>
       </div>
     </>
   );
 }
 
-export function PaperPlane({ size = 24, color = '#fff', stroke = '#3a99cf', trail = false }) {
-  const w = size * 2.4;
+// Commercial jet side-view silhouette
+export function JetPlane({ size = 40, bodyColor = '#ffffff', accentColor = '#3a99cf', stripe = '#1d9d8d', flip = false }) {
+  const w = size * 3.2;
+  const h = size;
+  // All coordinates in a 128×40 viewBox, nose pointing right
   return (
-    <svg width={w} height={size} viewBox="0 0 60 24" style={{ display: 'block' }}>
-      {trail && (
-        <path d="M2,16 Q15,12 28,14 Q40,15 48,12"
-              stroke={stroke} strokeOpacity="0.35"
-              strokeWidth="1.2" fill="none" strokeLinecap="round"
-              strokeDasharray="2 4"/>
-      )}
-      <g transform="translate(38,3)">
-        <path d="M0,8 L20,2 L18,10 L10,9 L18,12 L16,18 Z"
-              fill={color} stroke={stroke} strokeWidth="1.2" strokeLinejoin="round"/>
-        <path d="M10,9 L16,18" stroke={stroke} strokeWidth="1.2" strokeOpacity="0.5" fill="none"/>
-      </g>
+    <svg width={w} height={h} viewBox="0 0 128 40"
+         style={{ display: 'block', transform: flip ? 'scaleX(-1)' : undefined }}>
+      {/* Fuselage */}
+      <path d="M10,18 C18,11 36,13 56,13 L96,13 C110,13 118,17 120,20 C118,23 110,27 96,27 L56,27 C36,27 18,29 10,22 Z"
+            fill={bodyColor}/>
+      {/* Nose cone */}
+      <path d="M96,13 C110,13 122,16 124,20 C122,24 110,27 96,27 Z"
+            fill={bodyColor} opacity="0.9"/>
+      {/* Cockpit window tint */}
+      <path d="M98,15 C108,15 118,17 121,20 C118,23 108,25 98,25 Z"
+            fill={accentColor} opacity="0.35"/>
+      {/* Passenger windows */}
+      {[60,69,78,87,96].map((x, i) => (
+        <rect key={i} x={x} y="15" width="5.5" height="4" rx="2"
+              fill={accentColor} opacity="0.45"/>
+      ))}
+      {/* Fuselage colour stripe */}
+      <path d="M18,21 Q56,20.5 96,21 L110,21.5"
+            stroke={stripe} strokeWidth="1.6" fill="none" opacity="0.4" strokeLinecap="round"/>
+      {/* Main wing — swept back */}
+      <path d="M60,25 L38,40 L20,40 L48,25 Z"
+            fill={bodyColor} opacity="0.92"/>
+      {/* Engine pod under wing */}
+      <path d="M36,36 Q44,34 48,36 Q44,39 36,38 Z"
+            fill={bodyColor}/>
+      <ellipse cx="42" cy="37" rx="5" ry="1.6" fill={accentColor} opacity="0.22"/>
+      {/* Winglet at tip */}
+      <path d="M20,39 L17,33 L22,33 Z" fill={bodyColor} opacity="0.8"/>
+      {/* Vertical tail fin */}
+      <path d="M13,13 L20,2 L28,13 Z" fill={bodyColor}/>
+      {/* Horizontal stabiliser */}
+      <path d="M11,21 L4,29 L2,29 L8,21 Z" fill={bodyColor} opacity="0.9"/>
     </svg>
   );
+}
+
+// Keep PaperPlane export for compatibility
+export function PaperPlane({ size = 24, color = '#fff', stroke = '#3a99cf' }) {
+  return <JetPlane size={size} bodyColor={color} accentColor={stroke}/>;
 }
 
 export function MiniTower({ size = 32, color = '#2db8a7' }) {
