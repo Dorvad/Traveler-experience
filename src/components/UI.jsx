@@ -320,8 +320,8 @@ export function PhoneScreen({ children, bg = 'sky', pad = true }) {
       direction: 'rtl',
       width: '100%', height: '100%',
       background: bgs[bg],
-      paddingTop: 58,
-      paddingBottom: 34,
+      paddingTop: 'env(safe-area-inset-top, 0px)',
+      paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 24px)',
       overflowY: 'auto',
     }}>
       <div style={{ padding: pad ? '0 20px 24px' : 0 }}>

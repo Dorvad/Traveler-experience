@@ -1,14 +1,10 @@
 import { useState, useCallback } from 'react';
-import { IOSDevice } from './components/IOSFrame.jsx';
 import { LandingScreen } from './screens/LandingScreen.jsx';
 import { SetupScreen } from './screens/SetupScreen.jsx';
 import { CardsScreen } from './screens/CardsScreen.jsx';
 import { WizardScreen } from './screens/WizardScreen.jsx';
 import { SummaryScreen, PassengerDetailScreen } from './screens/SummaryScreen.jsx';
 import { INITIAL_SETUP, newPassenger } from './data/sampleData.js';
-
-const FRAME_W = 390;
-const FRAME_H = 844;
 
 function App() {
   const [screen, setScreen] = useState('landing');
@@ -173,24 +169,22 @@ function App() {
 
   return (
     <div style={{
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      minHeight: '100svh',
-      padding: '20px',
+      width: '100%',
+      maxWidth: 480,
+      height: '100svh',
+      position: 'relative',
+      overflow: 'hidden',
     }}>
-      <IOSDevice width={FRAME_W} height={FRAME_H}>
-        <div
-          key={screen}
-          className={animClass}
-          style={{
-            width: '100%', height: '100%',
-            position: 'absolute', inset: 0,
-          }}
-        >
-          {renderScreen()}
-        </div>
-      </IOSDevice>
+      <div
+        key={screen}
+        className={animClass}
+        style={{
+          width: '100%', height: '100%',
+          position: 'absolute', inset: 0,
+        }}
+      >
+        {renderScreen()}
+      </div>
     </div>
   );
 }

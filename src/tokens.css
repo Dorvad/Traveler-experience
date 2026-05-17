@@ -70,12 +70,11 @@ body {
 }
 
 #root {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   min-height: 100svh;
-  background: linear-gradient(135deg, #1a3a52 0%, #0e2e4d 50%, #143862 100%);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background: #0e2e4d;
 }
 
 /* RTL-safe utility */
