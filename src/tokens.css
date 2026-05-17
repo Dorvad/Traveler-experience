@@ -1,0 +1,195 @@
+/* ── Design tokens ── */
+:root {
+  /* Sky / atmosphere */
+  --sky-50:  #f3faff;
+  --sky-100: #e3f2fd;
+  --sky-200: #c8e6f7;
+  --sky-300: #a7d6f0;
+  --sky-400: #84c5e9;
+  --sky-500: #5fb4e3;
+  --sky-600: #3a99cf;
+
+  /* Teal — glass / accent */
+  --teal-100: #d6f2ee;
+  --teal-300: #7bd7c8;
+  --teal-400: #4dc7b8;
+  --teal-500: #2db8a7;
+  --teal-600: #1d9d8d;
+
+  /* Navy / ink */
+  --ink-900: #0e2e4d;
+  --ink-800: #143862;
+  --ink-700: #1f4974;
+  --slate-600: #5b7186;
+  --slate-500: #7186a0;
+  --slate-400: #95a9bf;
+  --slate-300: #c5d2de;
+  --slate-200: #e2eaf2;
+  --slate-100: #eff4f9;
+  --paper: #f6fbff;
+  --white: #ffffff;
+
+  /* Status / accents */
+  --yellow-300: #ffe2a3;
+  --yellow-400: #ffd166;
+  --yellow-500: #f5b942;
+  --green-400: #6fd6a3;
+  --green-500: #4cc38a;
+  --green-600: #2faa6e;
+  --coral-300: #ffc4b1;
+  --coral-500: #f48066;
+
+  /* Radii */
+  --r-xs: 8px;
+  --r-sm: 12px;
+  --r-md: 18px;
+  --r-lg: 24px;
+  --r-xl: 32px;
+  --r-pill: 999px;
+
+  /* Shadows */
+  --shadow-card: 0 2px 8px rgba(20,56,98,0.06), 0 10px 28px rgba(20,56,98,0.08);
+  --shadow-card-lg: 0 4px 14px rgba(20,56,98,0.08), 0 24px 48px rgba(20,56,98,0.10);
+  --shadow-inset: inset 0 0 0 1px rgba(20,56,98,0.06);
+  --shadow-press: 0 1px 2px rgba(20,56,98,0.08);
+
+  /* Type */
+  --font: 'Rubik', 'Heebo', -apple-system, system-ui, sans-serif;
+  --font-display: 'Rubik', 'Heebo', -apple-system, system-ui, sans-serif;
+}
+
+/* Base */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; height: 100%; }
+body {
+  font-family: var(--font);
+  color: var(--ink-900);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  direction: rtl;
+}
+
+#root {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100svh;
+  background: linear-gradient(135deg, #1a3a52 0%, #0e2e4d 50%, #143862 100%);
+}
+
+/* RTL-safe utility */
+.rtl { direction: rtl; }
+
+/* Hide scrollbars */
+.tt-scroll::-webkit-scrollbar { display: none; }
+.tt-scroll { scrollbar-width: none; -ms-overflow-style: none; }
+
+/* Form elements reset */
+button { font-family: inherit; cursor: pointer; }
+input, textarea, select, button { font-family: inherit; color: inherit; }
+textarea { resize: none; }
+
+/* ── Animations ── */
+
+/* Subtle entrance */
+@keyframes ttFadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.tt-fade-up { animation: ttFadeUp .4s cubic-bezier(.2,.7,.3,1) both; }
+
+/* Screen slide transitions */
+@keyframes slideInFromLeft {
+  from { transform: translateX(-48px); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
+}
+@keyframes slideInFromRight {
+  from { transform: translateX(48px); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
+}
+.screen-enter-forward {
+  animation: slideInFromLeft .32s cubic-bezier(.2,.7,.3,1) both;
+}
+.screen-enter-back {
+  animation: slideInFromRight .32s cubic-bezier(.2,.7,.3,1) both;
+}
+
+/* Plane glide */
+@keyframes planeGlide1 {
+  0%   { transform: translate(-20%, 0)    rotate(-6deg); opacity: 0; }
+  8%   { opacity: 1; }
+  92%  { opacity: 1; }
+  100% { transform: translate(120%, -30px) rotate(-6deg); opacity: 0; }
+}
+@keyframes planeGlide2 {
+  0%   { transform: translate(120%, 0)   rotate(186deg); opacity: 0; }
+  10%  { opacity: 0.85; }
+  90%  { opacity: 0.85; }
+  100% { transform: translate(-20%, 40px) rotate(186deg); opacity: 0; }
+}
+@keyframes planeGlide3 {
+  0%   { transform: translate(-15%, 0)   rotate(-3deg); opacity: 0; }
+  10%  { opacity: 0.7; }
+  90%  { opacity: 0.7; }
+  100% { transform: translate(115%, -10px) rotate(-3deg); opacity: 0; }
+}
+@keyframes cloudDrift {
+  from { transform: translateX(0); }
+  to   { transform: translateX(20px); }
+}
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.4; transform: scale(0.7); }
+}
+@keyframes trailDraw {
+  from { stroke-dashoffset: 200; }
+  to   { stroke-dashoffset: 0; }
+}
+@keyframes progressShine {
+  0%   { background-position: 0% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Wizard step entrance */
+@keyframes wizardIn {
+  from { opacity: 0; transform: translateX(16px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.wizard-step { animation: wizardIn .35s cubic-bezier(.2,.7,.3,1) both; }
+
+/* Landing hero entrance */
+@keyframes heroFadeIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.hero-enter { animation: heroFadeIn .6s cubic-bezier(.2,.7,.3,1) both; }
+
+/* Card hover lift */
+@keyframes cardPop {
+  0%   { transform: translateY(0); }
+  50%  { transform: translateY(-3px); }
+  100% { transform: translateY(-2px); }
+}
+
+/* Chip bounce on select */
+@keyframes chipBounce {
+  0%   { transform: scale(1) translateY(0); }
+  40%  { transform: scale(1.08) translateY(-2px); }
+  70%  { transform: scale(0.97) translateY(0); }
+  100% { transform: scale(1) translateY(-1px); }
+}
+
+/* Success check */
+@keyframes checkPop {
+  0%   { transform: scale(0) rotate(-20deg); opacity: 0; }
+  60%  { transform: scale(1.15) rotate(5deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+/* Bottom sheet slide up */
+@keyframes sheetSlideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+.sheet-enter { animation: sheetSlideUp .3s cubic-bezier(.2,.7,.3,1) both; }
