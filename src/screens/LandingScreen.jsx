@@ -79,24 +79,16 @@ export function LandingScreen({ onStart, onHow }) {
 
         <div style={{ flex: 1 }}/>
 
-        {/* Partner logos placeholder */}
+        {/* Partner logos */}
         <div style={{
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          gap: 18, marginTop: 18, opacity: 0.55,
+          gap: 20, marginTop: 18,
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6,
-                        fontSize: 10.5, color: 'var(--slate-500)', fontWeight: 500 }}>
-            <div style={{ width: 44, height: 16, borderRadius: 4,
-                          background: 'rgba(20,56,98,0.10)' }}/>
-            <span>שותף 1</span>
-          </div>
-          <div style={{ width: 1, height: 14, background: 'rgba(20,56,98,0.12)' }}/>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6,
-                        fontSize: 10.5, color: 'var(--slate-500)', fontWeight: 500 }}>
-            <div style={{ width: 44, height: 16, borderRadius: 4,
-                          background: 'rgba(20,56,98,0.10)' }}/>
-            <span>שותף 2</span>
-          </div>
+          <img src={`${import.meta.env.BASE_URL}logo-iaa.png`} alt="רשות שדות התעופה בישראל"
+               style={{ height: 36, objectFit: 'contain', opacity: 0.85 }}/>
+          <div style={{ width: 1, height: 28, background: 'rgba(20,56,98,0.15)' }}/>
+          <img src={`${import.meta.env.BASE_URL}logo-ngg.png`} alt="NGG"
+               style={{ height: 40, objectFit: 'contain', opacity: 0.85 }}/>
         </div>
       </div>
     </div>
