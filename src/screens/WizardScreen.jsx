@@ -511,7 +511,7 @@ function Step4({ passenger, setPassenger }) {
         )}
       </Field>
 
-      <Field q="איזה מענה ניתן?">
+      <Field q="איזה מענה ניתן?" help="ניתן לבחור יותר מאחד">
         <ChipGroup>
           {['הסבר','הכוונה','פתרון בעיה','הרגעה','קיצור תהליך','הפניה לגורם אחר',
             'ליווי פיזי','בדיקה במערכת','לא ניתן מענה','המענה היה לא ברור','אחר']
@@ -747,18 +747,11 @@ function ImpactSelect({ value, onChange, color }) {
 function Step6({ passenger, setPassenger }) {
   const s = passenger.step6 || {};
   const update = (patch) => setPassenger({ ...passenger, step6: { ...s, ...patch } });
-  const overall = [
-    { id: 'very-neg', label: 'שלילית מאוד', emoji: '😣', color: '#d65a40' },
-    { id: 'neg',      label: 'שלילית',       emoji: '🙁', color: '#f48066' },
-    { id: 'neutral',  label: 'ניטרלית',      emoji: '😐', color: '#95a9bf' },
-    { id: 'pos',      label: 'חיובית',       emoji: '🙂', color: '#6fd6a3' },
-    { id: 'very-pos', label: 'חיובית מאוד',  emoji: '😄', color: '#2faa6e' },
-  ];
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
       <Field q="איך הנוסע כנראה יזכור את החוויה?">
         <ChipGroup>
-          {['יעילה','נעימה','מקצועית','ברורה','מבלבלת','מלחיצה','מתסכלת',
+          {['יעילה','נעימה','מקצועית','ברורה','חוויה מרגשת','מבלבלת','מלחיצה','מתסכלת',
             'איטית','לא אישית','מפתיעה לטובה','לא משמעותית במיוחד','אחר'].map(o => (
               <Chip key={o} selected={(s.memory || []).includes(o)}
                     onClick={() => update({ memory: toggle(s.memory || [], o) })}>
@@ -769,34 +762,6 @@ function Step6({ passenger, setPassenger }) {
         {(s.memory || []).includes('אחר') && (
           <OtherInput value={s.memoryCustom} onChange={v => update({ memoryCustom: v })}/>
         )}
-      </Field>
-
-      <Field q="השפעה כוללת על תפיסת השירות">
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: 6 }}>
-          {overall.map(o => {
-            const sel = s.overall === o.id;
-            return (
-              <button key={o.id} onClick={() => update({ overall: o.id })}
-                style={{
-                  border: 0, cursor: 'pointer', fontFamily: 'inherit',
-                  padding: '12px 4px', borderRadius: 16,
-                  background: sel ? `${o.color}26` : '#fff',
-                  boxShadow: sel
-                    ? `inset 0 0 0 2px ${o.color}, 0 6px 14px ${o.color}33`
-                    : '0 1px 3px rgba(20,56,98,0.06), inset 0 0 0 1px rgba(20,56,98,0.06)',
-                  transition: 'all .15s',
-                  transform: sel ? 'translateY(-2px)' : 'none',
-                }}>
-                <div style={{ fontSize: 22, lineHeight: 1 }}>{o.emoji}</div>
-                <div style={{
-                  fontSize: 10.5, marginTop: 6, fontWeight: 600,
-                  color: sel ? o.color : 'var(--slate-600)',
-                  lineHeight: 1.2,
-                }}>{o.label}</div>
-              </button>
-            );
-          })}
-        </div>
       </Field>
 
       <Field q="מה לדעתכם יישאר עם הנוסע אחרי המפגש?"

@@ -38,21 +38,10 @@ export function SetupScreen({ data, setData, onContinue, onBack }) {
                    label="שם הצוות" placeholder="לדוגמה: צוות חוויה · משמרת בוקר"
                    value={data.team}
                    onChange={e => setData({ ...data, team: e.target.value })}/>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-          <InputCard icon={<Icon name="calendar" size={22}/>}
-                     label="תאריך"
-                     value={data.date}
-                     onChange={e => setData({ ...data, date: e.target.value })}/>
-          <InputCard icon={<Icon name="clock" size={22}/>}
-                     label="משך תצפית"
-                     placeholder="2 שעות"
-                     value={data.duration}
-                     onChange={e => setData({ ...data, duration: e.target.value })}/>
-        </div>
-        <InputCard icon={<Icon name="users" size={22}/>}
-                   label="מספר משתתפים" placeholder="6"
-                   value={data.participants}
-                   onChange={e => setData({ ...data, participants: e.target.value })}/>
+        <InputCard icon={<Icon name="calendar" size={22}/>}
+                   label="תאריך"
+                   value={data.date}
+                   onChange={e => setData({ ...data, date: e.target.value })}/>
       </div>
 
       {/* Area selection */}
