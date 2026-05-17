@@ -114,24 +114,38 @@ textarea { resize: none; }
   animation: slideInFromRight .32s cubic-bezier(.2,.7,.3,1) both;
 }
 
-/* Plane glide */
-@keyframes planeGlide1 {
-  0%   { transform: translate(-20%, 0)    rotate(-6deg); opacity: 0; }
-  8%   { opacity: 1; }
+/* Plane fly left-to-right */
+@keyframes flyLTR {
+  0%   { transform: translateX(-220px); opacity: 0; }
+  6%   { opacity: 1; }
   92%  { opacity: 1; }
-  100% { transform: translate(120%, -30px) rotate(-6deg); opacity: 0; }
+  100% { transform: translateX(calc(100vw + 220px)); opacity: 0; }
+}
+/* Plane fly right-to-left */
+@keyframes flyRTL {
+  0%   { transform: translateX(calc(100vw + 220px)); opacity: 0; }
+  6%   { opacity: 1; }
+  92%  { opacity: 1; }
+  100% { transform: translateX(-220px); opacity: 0; }
+}
+/* Keep old names as aliases for any other references */
+@keyframes planeGlide1 {
+  0%   { transform: translateX(-220px); opacity: 0; }
+  6%   { opacity: 1; }
+  92%  { opacity: 1; }
+  100% { transform: translateX(calc(100vw + 220px)); opacity: 0; }
 }
 @keyframes planeGlide2 {
-  0%   { transform: translate(120%, 0)   rotate(186deg); opacity: 0; }
-  10%  { opacity: 0.85; }
-  90%  { opacity: 0.85; }
-  100% { transform: translate(-20%, 40px) rotate(186deg); opacity: 0; }
+  0%   { transform: translateX(calc(100vw + 220px)); opacity: 0; }
+  6%   { opacity: 1; }
+  92%  { opacity: 1; }
+  100% { transform: translateX(-220px); opacity: 0; }
 }
 @keyframes planeGlide3 {
-  0%   { transform: translate(-15%, 0)   rotate(-3deg); opacity: 0; }
-  10%  { opacity: 0.7; }
-  90%  { opacity: 0.7; }
-  100% { transform: translate(115%, -10px) rotate(-3deg); opacity: 0; }
+  0%   { transform: translateX(-220px); opacity: 0; }
+  8%   { opacity: 0.75; }
+  90%  { opacity: 0.75; }
+  100% { transform: translateX(calc(100vw + 220px)); opacity: 0; }
 }
 @keyframes cloudDrift {
   from { transform: translateX(0); }

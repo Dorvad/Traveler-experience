@@ -1,14 +1,16 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Icon, PaperPlane, MiniTower } from '../components/AirportArt.jsx';
 import { PhoneScreen, TopBar, Chip, ChipGroup, StatusPill, Button } from '../components/UI.jsx';
 import { CAUSE_GROUPS } from './WizardScreen.jsx';
 import { getAreaLabel } from '../data/sampleData.js';
+import { downloadAsImage, downloadAsPDF } from '../utils/download.js';
 
 // ─────────────────────────────────────────────────────────────
 // Summary Screen
 // ─────────────────────────────────────────────────────────────
 export function SummaryScreen({ setup, passengers, onDownload, onShare, onBack, onSaveDraft }) {
   const [showDownload, setShowDownload] = useState(false);
+  const contentRef = useRef(null);
   const completed = passengers.filter(p => p.status === 'done');
 
   const repeatedNeeds = countTags(completed.flatMap(p => p.step3?.needs || []));
@@ -21,6 +23,7 @@ export function SummaryScreen({ setup, passengers, onDownload, onShare, onBack, 
   return (
     <div style={{ position: 'relative', height: '100%' }}>
       <PhoneScreen bg="summary">
+        <div ref={contentRef}>
         <TopBar title="סיכום התצפית" onBack={onBack}
                 right={(
                   <button onClick={onSaveDraft} style={{
@@ -137,7 +140,7 @@ export function SummaryScreen({ setup, passengers, onDownload, onShare, onBack, 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             <Button variant="primary" size="md" onClick={() => setShowDownload(true)}
                     icon={<Icon name="download" size={18}/>}>
-              הורדת סיכום PDF
+              הורדה / שיתוף
             </Button>
             <div style={{ display: 'flex', gap: 8 }}>
               <Button variant="secondary" size="md" onClick={onShare}
@@ -151,13 +154,15 @@ export function SummaryScreen({ setup, passengers, onDownload, onShare, onBack, 
             </div>
           </div>
         </div>
+        </div>{/* /contentRef */}
       </PhoneScreen>
 
       {/* Download sheet overlay */}
       {showDownload && (
         <DownloadSheet
+          contentRef={contentRef}
           onClose={() => setShowDownload(false)}
-          onSent={() => { setShowDownload(false); onDownload && onDownload(); }}/>
+          onDone={() => { setShowDownload(false); onDownload && onDownload(); }}/>
       )}
     </div>
   );
@@ -331,7 +336,22 @@ function countTags(arr) {
 // ─────────────────────────────────────────────────────────────
 // Download Sheet (bottom modal)
 // ─────────────────────────────────────────────────────────────
-function DownloadSheet({ onClose, onSent }) {
+function DownloadSheet({ contentRef, onClose, onDone }) {
+  const [loading, setLoading] = useState(null);
+
+  const handle = async (type) => {
+    if (!contentRef?.current) return;
+    setLoading(type);
+    try {
+      const el = contentRef.current;
+      if (type === 'pdf') await downloadAsPDF(el, 'סיכום-תצפית.pdf');
+      else await downloadAsImage(el, 'סיכום-תצפית.png');
+      onDone();
+    } finally {
+      setLoading(null);
+    }
+  };
+
   return (
     <div style={{
       position: 'absolute', inset: 0, zIndex: 100,
@@ -398,19 +418,21 @@ function DownloadSheet({ onClose, onSent }) {
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <Button variant="primary" size="md" onClick={onSent}
-                  icon={<Icon name="download" size={18}/>}>
-            שמירה למכשיר
+          <Button variant="primary" size="md"
+                  onClick={() => handle('pdf')}
+                  disabled={!!loading}
+                  icon={<Icon name="pdf" size={18}/>}>
+            {loading === 'pdf' ? 'מייצר PDF...' : 'הורדה כ-PDF'}
           </Button>
-          <div style={{ display: 'flex', gap: 8 }}>
-            <Button variant="secondary" size="md" onClick={onSent}
-                    icon={<Icon name="share" size={16}/>}>
-              שיתוף בקישור
-            </Button>
-            <Button variant="ghost" size="md" onClick={onClose}>
-              ביטול
-            </Button>
-          </div>
+          <Button variant="secondary" size="md"
+                  onClick={() => handle('image')}
+                  disabled={!!loading}
+                  icon={<Icon name="download" size={16}/>}>
+            {loading === 'image' ? 'שומר תמונה...' : 'הורדה כתמונה (PNG)'}
+          </Button>
+          <Button variant="ghost" size="md" onClick={onClose}>
+            ביטול
+          </Button>
         </div>
       </div>
     </div>
@@ -445,6 +467,20 @@ function PdfThumbnail() {
 // Passenger Detail Screen
 // ─────────────────────────────────────────────────────────────
 export function PassengerDetailScreen({ passenger, index, onBack, onEdit }) {
+  const contentRef = useRef(null);
+  const [dlLoading, setDlLoading] = useState(null);
+
+  const handleDownload = async (type) => {
+    if (!contentRef.current) return;
+    setDlLoading(type);
+    try {
+      if (type === 'pdf') await downloadAsPDF(contentRef.current, `נוסע-${index}.pdf`);
+      else await downloadAsImage(contentRef.current, `נוסע-${index}.png`);
+    } finally {
+      setDlLoading(null);
+    }
+  };
+
   return (
     <PhoneScreen bg="paper">
       <TopBar title={`כרטיס נוסע ${index}`} onBack={onBack}
@@ -461,6 +497,7 @@ export function PassengerDetailScreen({ passenger, index, onBack, onEdit }) {
                 </button>
               )}/>
 
+      <div ref={contentRef}>
       {/* Hero — completed */}
       <div style={{
         position: 'relative',
@@ -581,6 +618,33 @@ export function PassengerDetailScreen({ passenger, index, onBack, onEdit }) {
           </div>
         )}
       </CollapsibleSection>
+      </div>{/* /contentRef */}
+
+      {/* Download buttons */}
+      <div style={{
+        background: '#ffffff', borderRadius: 20,
+        padding: '14px', boxShadow: 'var(--shadow-card)', marginTop: 4,
+      }}>
+        <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink-900)', marginBottom: 10 }}>
+          הורדת כרטיס נוסע {index}
+        </div>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <Button variant="primary" size="sm" fullWidth={false}
+                  onClick={() => handleDownload('pdf')}
+                  disabled={!!dlLoading}
+                  icon={<Icon name="pdf" size={15}/>}
+                  style={{ flex: 1 }}>
+            {dlLoading === 'pdf' ? '...' : 'PDF'}
+          </Button>
+          <Button variant="secondary" size="sm" fullWidth={false}
+                  onClick={() => handleDownload('image')}
+                  disabled={!!dlLoading}
+                  icon={<Icon name="download" size={15}/>}
+                  style={{ flex: 1 }}>
+            {dlLoading === 'image' ? '...' : 'תמונה'}
+          </Button>
+        </div>
+      </div>
     </PhoneScreen>
   );
 }

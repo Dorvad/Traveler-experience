@@ -424,7 +424,8 @@ export function ScaleRow({ value, onChange, labels = [] }) {
       </div>
       {labels.length === 2 && (
         <div style={{ display: 'flex', justifyContent: 'space-between',
-                      fontSize: 11.5, color: 'var(--slate-500)', marginTop: 6 }}>
+                      fontSize: 11.5, color: 'var(--slate-500)', marginTop: 6,
+                      direction: 'ltr' }}>
           <span>{labels[1]}</span><span>{labels[0]}</span>
         </div>
       )}

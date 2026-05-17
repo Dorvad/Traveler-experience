@@ -167,51 +167,33 @@ function Cloud({ cx, cy, rx, ry }) {
 }
 
 function PlaneFlock() {
+  const plane = (top, size, dur, delay, flip, body, accent, stripe) => ({
+    position: 'absolute', top, left: 0,
+    pointerEvents: 'none',
+    animation: `${flip ? 'flyRTL' : 'flyLTR'} ${dur}s linear infinite ${delay}s`,
+    animationFillMode: 'backwards',
+  });
   return (
     <>
-      {/* Large plane, left → right, high altitude */}
-      <div style={{
-        position: 'absolute', top: '6%', left: 0, width: '100%',
-        height: 44, pointerEvents: 'none',
-        animation: 'planeGlide1 20s linear infinite',
-      }}>
-        <JetPlane size={44} bodyColor="#ffffff" accentColor="#3a99cf" stripe="#1d9d8d"/>
+      {/* Large, left → right */}
+      <div style={plane('6%',  44, 22,  0, false)}>
+        <JetPlane size={44} bodyColor="#ffffff"  accentColor="#3a99cf" stripe="#1d9d8d"/>
       </div>
-
-      {/* Medium plane, right → left */}
-      <div style={{
-        position: 'absolute', top: '22%', left: 0, width: '100%',
-        height: 34, pointerEvents: 'none',
-        animation: 'planeGlide2 28s linear infinite 5s',
-      }}>
+      {/* Medium, right → left */}
+      <div style={plane('23%', 34, 30,  6, true)}>
         <JetPlane size={34} bodyColor="#e8f4fc" accentColor="#5fb6bc" stripe="#2db8a7" flip/>
       </div>
-
-      {/* Small distant plane, left → right */}
-      <div style={{
-        position: 'absolute', top: '38%', left: 0, width: '100%',
-        height: 26, pointerEvents: 'none',
-        animation: 'planeGlide3 36s linear infinite 11s',
-      }}>
-        <JetPlane size={26} bodyColor="#ffffff" accentColor="#84c5e9" stripe="#5fb4e3"/>
+      {/* Small, left → right */}
+      <div style={plane('40%', 26, 38, 13, false)}>
+        <JetPlane size={26} bodyColor="#ffffff"  accentColor="#84c5e9" stripe="#5fb4e3"/>
       </div>
-
-      {/* Extra plane, left → right, very high */}
-      <div style={{
-        position: 'absolute', top: '13%', left: 0, width: '100%',
-        height: 22, pointerEvents: 'none',
-        animation: 'planeGlide1 44s linear infinite 18s',
-      }}>
-        <JetPlane size={22} bodyColor="#ddeef8" accentColor="#3a99cf" stripe="#2db8a7"/>
+      {/* Tiny high, left → right */}
+      <div style={plane('13%', 20, 46, 20, false)}>
+        <JetPlane size={20} bodyColor="#ddeef8" accentColor="#3a99cf" stripe="#2db8a7"/>
       </div>
-
-      {/* Extra plane, right → left, mid altitude */}
-      <div style={{
-        position: 'absolute', top: '30%', left: 0, width: '100%',
-        height: 30, pointerEvents: 'none',
-        animation: 'planeGlide2 32s linear infinite 24s',
-      }}>
-        <JetPlane size={30} bodyColor="#ffffff" accentColor="#6ab8e8" stripe="#3a99cf" flip/>
+      {/* Medium-small, right → left */}
+      <div style={plane('31%', 30, 34, 28, true)}>
+        <JetPlane size={30} bodyColor="#ffffff"  accentColor="#6ab8e8" stripe="#3a99cf" flip/>
       </div>
     </>
   );
